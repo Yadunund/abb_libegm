@@ -866,6 +866,20 @@ bool parse(wrapper::Feedback* p_target, const EgmFeedBack& source, const RobotAx
 {
   bool success = false;
 
+  std::cout << "EGMFeedback joints: ";
+  for (const auto& j : source.joints().joints())
+    std::cout << j << ",";
+  std::cout << std::endl;
+
+  // std::cout << "EGMFeedback external joints: ";
+  // for (const auto& j : source.externalJoints().joints())
+  //   std::cout << j << ",";
+  // std::cout << std::endl;
+
+  std::cout << "EGMFeedback pose: " << source.cartesian().pos().x() << ","
+            << source.cartesian().pos().y() << ","
+            << source.cartesian().pos().z() << std::endl;
+
   if (p_target)
   {
     success = parse(p_target->mutable_robot()->mutable_joints()->mutable_position(),
@@ -881,6 +895,22 @@ bool parse(wrapper::Feedback* p_target, const EgmFeedBack& source, const RobotAx
       else
       {
         success = parse(p_target->mutable_robot()->mutable_cartesian()->mutable_pose(), source.cartesian());
+
+        // This is a special case where the joint value for linear axis as reported by the robot is incorrect
+        // Hence we estimate this from the cartesian Z-Axis. This works for the IRB910SC 4-Axis robot
+        if (axes == Four)
+        {
+          if (source.has_cartesian())
+          {
+            auto mutable_values = p_target->mutable_robot()->mutable_joints()->mutable_position()->mutable_values();
+            auto& val = mutable_values->at(2);
+            val = source.cartesian().pos().z() - 220.2;
+          }
+          else
+          {
+            success = false;
+          }
+        }
       }
 
       if (success)
