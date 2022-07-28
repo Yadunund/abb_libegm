@@ -119,16 +119,6 @@ void EGMControllerInterface::ControllerMotion::readInputs(wrapper::Input* p_inpu
 {
   boost::lock_guard<boost::mutex> lock(read_mutex_);
 
-  std::cout << "### [ControllerMotion::readInputs()] ###" << std::endl;
-  std::cout << "Feedback: " << std::endl;
-  const auto& joint_space = inputs_.feedback().robot().joints();
-  const auto& cartesian_space = inputs_.feedback().robot().cartesian();
-  std::cout << "Positions: [";
-  for (const auto& p : joint_space.position().values())
-  {
-    std::cout << p << ",";
-  }
-  std::cout << "]" << std::endl;
   p_inputs->CopyFrom(inputs_);
   read_data_ready_ = false;
 }

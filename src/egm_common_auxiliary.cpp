@@ -866,20 +866,6 @@ bool parse(wrapper::Feedback* p_target, const EgmFeedBack& source, const RobotAx
 {
   bool success = false;
 
-  std::cout << "EGMFeedback joints: ";
-  for (const auto& j : source.joints().joints())
-    std::cout << j << ",";
-  std::cout << std::endl;
-
-  // std::cout << "EGMFeedback external joints: ";
-  // for (const auto& j : source.externalJoints().joints())
-  //   std::cout << j << ",";
-  // std::cout << std::endl;
-
-  std::cout << "EGMFeedback pose: " << source.cartesian().pos().x() << ","
-            << source.cartesian().pos().y() << ","
-            << source.cartesian().pos().z() << std::endl;
-
   if (p_target)
   {
     success = parse(p_target->mutable_robot()->mutable_joints()->mutable_position(),
