@@ -41,6 +41,7 @@
 #include <boost/math/quaternion.hpp>
 
 #include "abb_libegm/egm_common_auxiliary.h"
+#include "abb_libegm/egm_common.h"
 
 namespace abb
 {
@@ -889,8 +890,8 @@ bool parse(wrapper::Feedback* p_target, const EgmFeedBack& source, const RobotAx
           if (source.has_cartesian())
           {
             auto mutable_values = p_target->mutable_robot()->mutable_joints()->mutable_position()->mutable_values();
-            auto& val = mutable_values->at(2);
-            val = source.cartesian().pos().z() - 220.2;
+            auto& val = mutable_values->at(Constants::RobotController::INDEX_OF_PRISMATIC_JOINT);
+            val = source.cartesian().pos().z() - Constants::RobotController::Z_AXIS_OFFSET_FOR_FOUR_AXIS_ROBOT;
           }
           else
           {
